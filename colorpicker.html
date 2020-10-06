@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="constant.js"></script>
+    <script src="controller.js"></script>
+    <script src="viewer.js"></script>
+</head>
+
+<body>
+    <!-- 操作パネル -->
+    <form id="operationTypeId" name="formRadioButtons">
+        <input type="radio" disabled id="colorPix" name="operationType" value="colorPix" checked="checked"
+            onclick="clearSelectRange()">
+        <label for="colorPix">カラーピッカ</label>
+        <input type="radio" disabled id="selectRect" name="operationType" value="selectRect"
+            onclick="clickSelectRange()">
+        <label for="selectRect">範囲指定</label><BR>
+    </form>
+
+    <form name="formComboboxes">
+        カラーフォーマット
+        <select id="colorFormat" disabled>
+            <option value="RGB">RGB</option>
+            <option value="HSV">HSV</option>
+            <option value="YUV">YUV</option>
+        </select>
+        階調化
+        <select id="binNumberId" disabled onChange="selectBinNumber()">
+            <option value="256">なし</option>
+            <option value="32">32階調</option>
+            <option value="16">16階調</option>
+            <option value="8">8階調</option>
+            <option value="4">4階調</option>
+        </select><BR>
+    </form>
+    選択ピクセル色<br>
+    <span id="pixelColor"></span><br>
+    座標<br>
+    <span id="imageLocation"></span><br>
+
+    <input type="file" id="fileSelect" accept="image/jpeg,image/png,image/gif" onchange="readImg()"><BR>
+    <input type="button" disabled id="analysisImg" value="解析" onclick="analysisImg()"><BR>
+
+    <!-- 元画表示 -->
+    <Div>
+        <canvas width="320" height="240" style="position: relative;"></canvas>
+        <canvas id="baseImg" width="320" height="240" style="position: absolute; left: 0;"></canvas>
+        <!-- 上に重ねたレイヤの方でイベントをとる必要あり -->
+        <canvas id="baseImgOverlayer" width="320" height="240" style="position: absolute; left: 0;"
+            onclick="clickBaseImg(event)" onmousemove="drawRectOnBaseImg(event)"></canvas>
+    </div>
+
+    <div style="width: 1000px;height:250px;overflow:auto;">
+        <!-- 成分画表示 -->
+        <div>
+            <canvas id="colorComponent1Img" width="320" height="240"></canvas>
+            <canvas id="colorComponent2Img" width="320" height="240"></canvas>
+            <canvas id="colorComponent3Img" width="320" height="240"></canvas>
+        </div>
+        <!-- ヒストグラム表示 -->
+        <div id="histgramImgId">
+            <canvas id="histgram1Img" width="320" height="240"></canvas>
+            <canvas id="histgram2Img" width="320" height="240"></canvas>
+            <canvas id="histgram3Img" width="320" height="240"></canvas>
+        </div>
+    </div>
+</body>
+
+</html>
