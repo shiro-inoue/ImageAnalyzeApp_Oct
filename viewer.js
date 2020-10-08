@@ -37,6 +37,8 @@ function readImg() {
 
         }
         img.src = reader.result;
+        imageBase64 = reader.result;
+        selectFileName = fileSelect.files[0].name;
     }
     reader.readAsDataURL(fileSelect.files[0]);
 
@@ -44,6 +46,7 @@ function readImg() {
     document.getElementById("binNumberId").disabled = "";
     document.getElementById("colorPix").disabled = "";
     document.getElementById("analysisImg").disabled = "";
+    document.getElementById("x1Img").disabled = "";
     document.getElementById("selectRect").disabled = "";
 }
 
@@ -176,4 +179,28 @@ function adjustmentGradationCombobox() {
     if (document.formComboboxes.binNumberId.selectedIndex === 0) {
         document.formComboboxes.binNumberId.selectedIndex = 1;
     }
+}
+
+function openImageWindow() {
+    let img = new Image();
+    img.onload = () => {
+        let pop_win = window.open(
+            "",
+            "_blank",
+            "width=" + img.width + ",height=" + img.height + ",scrollbars=no,resizable=yes"
+        );
+        if (pop_win) {
+            pop_win.window.document.open();
+            pop_win.window.document.write(
+                '<html>'
+                + '<head><title>' + selectFileName + '</title></head>'
+                + '<body style="margin:0;padding:0;border:0;">'
+                + '<img src="' + img.src + '" width="100%" alt="" />'
+                + '</body>'
+                + '</html>'
+            );
+            pop_win.window.document.close();
+        }
+    }
+    img.src = imageBase64;
 }
