@@ -182,10 +182,9 @@ function adjustmentGradationCombobox() {
 }
 
 function openImageWindow() {
-    var img = new Image();
+    let img = new Image();
     img.onload = () => {
-        console.log("onload in");
-        var pop_win = window.open(
+        let pop_win = window.open(
             "",
             "_blank",
             "width=" + img.width + ",height=" + img.height + ",scrollbars=no,resizable=yes"
