@@ -20,6 +20,8 @@ function clearSelectRange() {
 }
 
 function readImg() {
+    isCameraImageDraw = false;
+    allClear();
 
     const reader = new FileReader();
     const fileSelect = document.getElementById("fileSelect");
@@ -51,6 +53,10 @@ function readImg() {
 }
 
 function clickBaseImg(event) {
+    if (!isOperateCamera()) {
+        return;
+    }
+
     if (isOperationTypeColorPix()) {
         const cvs = document.getElementById("baseImg");
         let ctx = cvs.getContext("2d");
@@ -203,4 +209,91 @@ function openImageWindow() {
         }
     }
     img.src = imageBase64;
+}
+
+function operateCamera() {
+    if (isOperateCamera()) {
+        openCameraImage();
+    }
+    else {
+        stopCameraImage();
+    }
+}
+
+function openCameraImage() {
+    let media;
+
+    allClear();
+
+    video = document.createElement('video');
+    video.id = 'video';
+    video.width = IMAGE_WIDHT;
+    video.height = IMAGE_HEIGHT;
+    video.autoplay = true;
+
+    media = navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: true
+    }).then(function (stream) {
+        video.srcObject = stream;
+        document.getElementById('cameraImg').value = CAMERA_STOP;
+        document.getElementById("fileSelect").disabled = true;
+        document.getElementById("colorFormat").disabled = false;
+        document.getElementById("colorPix").disabled = true;
+        document.getElementById("binNumberId").disabled = false;
+        document.getElementById("analysisImg").disabled = false;
+        document.getElementById("x1Img").disabled = true;
+        document.getElementById("selectRect").disabled = true;
+    }).catch(function (error) {
+        alert("カメラの接続を確認して下さい。");
+    });
+
+    cvsCamera = document.getElementById("baseImg");
+    cvsCtx = cvsCamera.getContext('2d');
+
+    _canvasUpdate();
+
+    function _canvasUpdate() {
+        cvsCtx.drawImage(video, 0, 0, cvsCamera.width, cvsCamera.height);
+        callbackId = requestAnimationFrame(_canvasUpdate);
+    };
+}
+
+function stopCameraImage() {
+    video.srcObject.getTracks().forEach(track => track.stop());
+    cancelAnimationFrame(callbackId);
+    cvsCtx.clearRect(0, 0, cvsCamera.width, cvsCamera.height);
+    imageBase64 = "";
+
+    document.getElementById('cameraImg').value = CAMERA_START;
+    document.getElementById("fileSelect").disabled = false;
+    document.getElementById("colorFormat").disabled = true;
+    document.getElementById("binNumberId").disabled = true;
+    document.getElementById("analysisImg").disabled = true;
+}
+
+function isOperateCamera() {
+    if (document.getElementById('cameraImg').value == CAMERA_START) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+function allClear(){
+    // disabledUI(true);
+
+    clearSelectRect();
+    clearPixelColor();
+    clearSelectRange();
+
+    let arrImgName = ["baseImg",
+                    "colorComponent1Img", "colorComponent2Img", "colorComponent3Img",
+                    "histgram1Img", "histgram2Img", "histgram3Img"];
+    for(i=0; i<arrImgName.length; i++){
+        let cvs = document.getElementById(arrImgName[i]);
+        let ctx = cvs.getContext("2d");
+        ctx.clearRect(0, 0, cvs.clientWidth, cvs.clientHeight);
+    }
 }
