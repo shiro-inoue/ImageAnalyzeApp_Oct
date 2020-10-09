@@ -1,7 +1,29 @@
 function analysisImg() {
-    if (fileSelect.files.length == 0) {
-        return;
+    if (isOperateCamera()) {
+        if (fileSelect.files.length == 0 && !isCameraImageDraw) {
+            return;
+        }
     }
+    else {
+        video.pause();
+        imageData = cvsCtx.getImageData(0, 0, IMAGE_WIDHT, IMAGE_HEIGHT);
+        video.srcObject.getTracks().forEach(track => track.stop());
+        imageBase64 = cvsCamera.toDataURL("image/jpeg");
+
+        cancelAnimationFrame(callbackId);
+
+        isCameraImageDraw = true;
+
+        document.getElementById("fileSelect").disabled = false;
+        document.getElementById("colorFormat").disabled = false;
+        document.getElementById("binNumberId").disabled = false;
+        document.getElementById("colorPix").disabled = false;
+        document.getElementById("analysisImg").disabled = false;
+        document.getElementById("x1Img").disabled = false;
+        document.getElementById("selectRect").disabled = false;
+        document.getElementById('cameraImg').value = "カメラ開始";
+    }
+
     let colorFormat = document.getElementById('colorFormat');
 
     switch (colorFormat.value) {

@@ -7,6 +7,8 @@ const HISTGRAM_COLOR = [
     "rgb(0, 255, 255)", "rgb(255, 0, 255)", "rgb(128, 128, 128)",  //HSV
     "rgb(128, 128, 128)", "rgb(0, 0, 255)", "rgb(255, 0, 0)"];  //YUV
 const SELECT_RANGE_STATE = { NONE: 0, SELECTING: 1, SELECTED: 2 };
+const CAMERA_START = "カメラ開始";
+const CAMERA_STOP = "カメラ停止";
 
 let selectRangeState = SELECT_RANGE_STATE.NONE;
 let firstPosX = 0;
@@ -24,3 +26,10 @@ let compArr = new Array(toneArrR, toneArrG, toneArrB);
 let imageData;
 let imageBase64;
 let selectFileName;
+
+let video;
+let cvsCamera;
+let cvsCtx;
+let callbackId;
+let isCameraImageDraw = false;
+
